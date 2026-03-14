@@ -1,0 +1,19 @@
+services:
+  # Serviço 1: Seu script Go de ETL
+  #etl-service:
+    #build:
+    #  context: ./etl
+    #container_name: etl_worker
+    #restart: unless-stopped
+    # depends_on:
+    #   - kafka (Se você adicionar o Kafka no mesmo compose depois)
+
+  # Serviço 2: O Apache Superset
+  superset-service:
+    build:
+      context: ./superset
+    container_name: superset_dashboard
+    ports:
+      - "8088:8088"
+    environment:
+      SUPERSET_SECRET_KEY: "seminario_big_data_2026"
