@@ -12,7 +12,7 @@ RUN go mod download
 COPY . .
 
 # Build the application
-RUN go build -o main .cmd/main.go
+RUN go build -o main ./cmd/main.go
 
 # Stage 2: Final lightweight image
 FROM alpine:latest
