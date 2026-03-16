@@ -8,12 +8,33 @@ services:
     # depends_on:
     #   - kafka (Se você adicionar o Kafka no mesmo compose depois)
 
-  # Serviço 2: O Apache Superset
-  superset-service:
-    build:
-      context: ./superset
+  # SERVIÇO 2: O Apache Superset
+  superset:
+    image: txagou/superset-pipeline:latest
+    platform: linux/amd64 
     container_name: superset_dashboard
     ports:
       - "8088:8088"
     environment:
       SUPERSET_SECRET_KEY: "seminario_big_data_2026"
+    depends_on:
+      - db-postgres
+
+# Mapeamento do volume do banco
+volumes:
+  postgres_data:
+  version: '3.8'
+  services:
+  # SERVIÇO 1: O Banco de Dados PostgreSQL
+  db-postgres:
+    image: postgres:15
+    platform: linux/amd64 
+    container_name: pokemon_db
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
