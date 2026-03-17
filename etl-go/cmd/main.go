@@ -53,6 +53,8 @@ func main() {
        name TEXT,
        generation INT,
        total_stats INT,
+       type_1 TEXT,
+       type_2 TEXT,
        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );`
 	_, err = conn.Exec(ctx, createTableSQL)
