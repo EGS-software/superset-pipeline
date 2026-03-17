@@ -17,12 +17,12 @@ func TransformPokemon(apiData model.PokemonAPI) model.PokemonDB {
 
 	typeOne := ""
 	if len(apiData.Types) > 0 {
-		typeOne := apiData.Types[0].Type.Name
+		typeOne = apiData.Types[0].Type.Name
 	}
 
 	typeTwo := ""
 	if len(apiData.Types) > 0 {
-		typeTwo := apiData.Types[1].Type.Name
+		typeTwo = apiData.Types[1].Type.Name
 	}
 
 	return model.PokemonDB{
