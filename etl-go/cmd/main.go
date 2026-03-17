@@ -17,35 +17,47 @@ import (
 // Estruturas para mapear a PokeAPI
 
 func main() {
-	// 1. Get .env configs
 	_ = godotenv.Load()
 	dbURL := os.Getenv("DATABASE_URL")
 	if dbURL == "" {
-		log.Fatal("DATABASE_URL not configured")
+		log.Fatal("Error: DATABASE_URL environment variable is not set")
 	}
 
-	// 2. Connect in Postgres
+	// --- RETRY LOGIC START ---
+	var conn *pgx.Conn
+	var err error
 	ctx := context.Background()
-	conn, err := pgx.Connect(ctx, dbURL)
+
+	fmt.Println("⏳ Waiting for database to be ready...")
+	for i := 1; i <= 10; i++ {
+		conn, err = pgx.Connect(ctx, dbURL)
+		if err == nil {
+			break
+		}
+		fmt.Printf("Attempt %d/10: Database not ready yet, retrying in 2s...\n", i)
+		time.Sleep(2 * time.Second)
+	}
+
 	if err != nil {
-		log.Fatalf("Error to connect in DB: %v", err)
+		log.Fatalf("❌ Could not connect to database after 10 attempts: %v", err)
 	}
 	defer conn.Close(ctx)
+	// --- RETRY LOGIC END ---
 
-	fmt.Println("✅ Connected in Postgres!")
+	fmt.Println("✅ Successfully connected to Postgres!")
 
-	// 3. Criar a tabela se ela não existir (Garante que seu amigo consiga rodar)
+	// 3. Create table (The rest of your code stays the same...)
 	createTableSQL := `
-	CREATE TABLE IF NOT EXISTS pokemon_analytics (
-		id INT PRIMARY KEY,
-		name TEXT,
-		generation INT,
-		total_stats INT,
-		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-	);`
+    CREATE TABLE IF NOT EXISTS pokemon_analytics (
+       id INT PRIMARY KEY,
+       name TEXT,
+       generation INT,
+       total_stats INT,
+       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );`
 	_, err = conn.Exec(ctx, createTableSQL)
 	if err != nil {
-		log.Fatalf("Erro ao criar tabela: %v", err)
+		log.Fatalf("Failed to create table: %v", err)
 	}
 
 	// 4. Iniciar Coleta (Exemplo: Primeiros 151 Pokémon - Gen 1)
