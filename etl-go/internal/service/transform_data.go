@@ -10,9 +10,21 @@ func TransformPokemon(apiData model.PokemonAPI) model.PokemonDB {
 		bst += s.BaseStat
 	}
 
-	gen := 1
-	if apiData.ID > 151 {
+	gen := 0
+
+	switch {
+	case apiData.ID <= 151:
+		gen = 1
+	case apiData.ID <= 251:
 		gen = 2
+	case apiData.ID <= 386:
+		gen = 3
+	case apiData.ID <= 493:
+		gen = 4
+	case apiData.ID <= 649:
+		gen = 5
+	default:
+		gen = 6
 	}
 
 	typeOne := ""
