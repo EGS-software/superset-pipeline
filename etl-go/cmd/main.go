@@ -101,14 +101,13 @@ func main() {
 			dbData.TypeOne,
 			dbData.TypeTwo)
 		if err != nil {
-			fmt.Printf("❌ Erro ao salvar %s: %v\n", p.Name, err)
+			fmt.Printf("❌ Error to save %s: %v\n", p.Name, err)
 		} else {
-			fmt.Printf("💾 [%d] %s salvo com BST: %d\n", p.ID, p.Name, bst)
+			fmt.Printf("💾 [%d] %s salvo com BST: %d\n", p.ID, p.Name, dbData.TotalStats)
 		}
 
-		// Pequena pausa para não sobrecarregar a API pública
 		time.Sleep(100 * time.Millisecond)
 	}
 
-	fmt.Println("✨ Processo concluído! Dados prontos para análise no Superset.")
+	fmt.Println("✨ Data collect completed!")
 }
