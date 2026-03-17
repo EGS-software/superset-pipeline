@@ -1,17 +1,14 @@
+version: '3.8'
+
 services:
-  # Serviço 1: Seu script Go de ETL
-  #etl-service:
-    #build:
-    #  context: ./etl
-    #container_name: etl_worker
-    #restart: unless-stopped
-    # depends_on:
-    #   - kafka (Se você adicionar o Kafka no mesmo compose depois)
+  # Serviço 1: Seu script Go de ETL (Comentado por enquanto)
+  # etl-service:
+  #   build: ...
 
   # SERVIÇO 2: O Apache Superset
   superset:
     image: txagou/superset-pipeline:latest
-    platform: linux/amd64 
+    platform: linux/amd64
     container_name: superset_dashboard
     ports:
       - "8088:8088"
@@ -20,21 +17,20 @@ services:
     depends_on:
       - db-postgres
 
-# Mapeamento do volume do banco
-volumes:
-  postgres_data:
-  version: '3.8'
-  services:
-  # SERVIÇO 1: O Banco de Dados PostgreSQL
+  # SERVIÇO 3: O Banco de Dados PostgreSQL
   db-postgres:
     image: postgres:15
-    platform: linux/amd64 
+    platform: linux/amd64
     container_name: pokemon_db
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: joao_admin
+      POSTGRES_PASSWORD: minhasenha
+      POSTGRES_DB: pokemon_dw
     ports:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+# Mapeamento do volume do banco
+volumes:
+  postgres_data:
