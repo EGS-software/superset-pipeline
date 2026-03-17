@@ -104,7 +104,7 @@ func main() {
 		if err != nil {
 			fmt.Printf("❌ Error to save %s: %v\n", p.Name, err)
 		} else {
-			fmt.Printf("💾 [%d] %s | BST: %d | Types: %s ; %s | Generation: %d", p.ID, p.Name, dbData.TotalStats, dbData.TypeOne, dbData.TypeTwo, dbData.Generation)
+			fmt.Printf("💾 [%d] %s | BST: %d | Types: %s ; %s | Generation: %d\n", p.ID, p.Name, dbData.TotalStats, dbData.TypeOne, dbData.TypeTwo, dbData.Generation)
 		}
 
 		time.Sleep(100 * time.Millisecond)
