@@ -1,14 +1,19 @@
 version: '3.8'
 
 services:
-  # Serviço 1: Seu script Go de ETL (Comentado por enquanto)
-  # etl-service:
-  #   build: ...
+  # --- GO APP (ETL) ---
+  etl-go:
+    build: ./etl-go
+    container_name: etl-go
+    depends_on:
+      - db-postgres
+    environment:
+      # Note que o host é 'db-postgres' (nome do serviço acima) e não localhost
+      - DATABASE_URL=postgres://admin:password123@db-postgres:5432/pokemon_dw?sslmode=disable
 
   # SERVIÇO 2: O Apache Superset
   superset:
-    image: txagou/superset-pipeline:latest
-    platform: linux/amd64
+    build: ./superset
     container_name: superset_dashboard
     ports:
       - "8088:8088"
@@ -19,17 +24,19 @@ services:
 
   # SERVIÇO 3: O Banco de Dados PostgreSQL
   db-postgres:
-    image: postgres:15
+    image: postgres:15-alpine
     platform: linux/amd64
-    container_name: pokemon_db
+    container_name: db-postgres
+    restart: always
     environment:
-      POSTGRES_USER: joao_admin
-      POSTGRES_PASSWORD: minhasenha
-      POSTGRES_DB: pokemon_dw
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password123
+      - POSTGRES_DB=pokemon_dw
     ports:
-      - "5433:5432"
+      - "5433:5432" # Para você acessar do DBeaver/Datagrip em localhost:5433
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
 
 # Mapeamento do volume do banco
 volumes:
