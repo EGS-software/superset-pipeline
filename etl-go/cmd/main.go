@@ -66,7 +66,7 @@ func main() {
 	client := resty.New()
 	fmt.Println("🚀 Initializing Get Data...")
 
-	for i := 1; i <= 151; i++ { // "i" will be used to get Pokémon by ID in API
+	for i := 1; i <= 649; i++ { // "i" will be used to get Pokémon by ID in API
 		url := fmt.Sprintf("https://pokeapi.co/api/v2/pokemon/%d", i)
 		resp, err := client.R().Get(url)
 
@@ -104,7 +104,7 @@ func main() {
 		if err != nil {
 			fmt.Printf("❌ Error to save %s: %v\n", p.Name, err)
 		} else {
-			fmt.Printf("💾 [%d] %s salvo com BST: %d\n", p.ID, p.Name, dbData.TotalStats)
+			fmt.Printf("💾 [%d] %s | BST: %d | Types: %s ; %s | Generation: %d", p.ID, p.Name, dbData.TotalStats, dbData.TypeOne, dbData.TypeTwo, dbData.Generation)
 		}
 
 		time.Sleep(100 * time.Millisecond)
