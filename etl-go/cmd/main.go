@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/EGS-software/superset-pipeline/etl-go/internal/model"
+	"github.com/EGS-software/superset-pipeline/etl-go/internal/service"
 	"github.com/go-resty/resty/v2"
 	"github.com/jackc/pgx/v5"
 	"github.com/joho/godotenv"
@@ -78,26 +79,16 @@ func main() {
 		var p model.PokemonAPI
 		json.Unmarshal(resp.Body(), &p)
 
-		// 5. Transformação: Calcular o BST (Base Stat Total)
-		bst := 0
-		for _, s := range p.Stats {
-			bst += s.BaseStat
-		}
+		dbData := service.TransformPokemon(p)
 
-		// Lógica simples de geração baseada no ID
-		generation := 1
-		if i > 151 {
-			generation = 2
-		}
-
-		// 6. Salvando no Banco (UPSERT)
-		// O 'ON CONFLICT' garante que se o dado já existir, ele seja atualizado em vez de dar erro
 		upsertSQL := `
-			INSERT INTO pokemon_analytics (id, name, generation, total_stats)
-			VALUES ($1, $2, $3, $4)
+			INSERT INTO pokemon_analytics (id, name, generation, total_stats, type_1, type_2)
+			VALUES ($1, $2, $3, $4, $5, $6)
 			ON CONFLICT (id) DO UPDATE 
 			SET name = EXCLUDED.name, 
 			    total_stats = EXCLUDED.total_stats,
+			    type_1 = EXCLUDED.type_1,
+			    type_2 = EXCLUDED.type_2,
 			    updated_at = NOW();
 		`
 		_, err = conn.Exec(ctx, upsertSQL, p.ID, p.Name, generation, bst)
