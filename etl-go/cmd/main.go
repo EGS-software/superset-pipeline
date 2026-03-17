@@ -91,7 +91,15 @@ func main() {
 			    type_2 = EXCLUDED.type_2,
 			    updated_at = NOW();
 		`
-		_, err = conn.Exec(ctx, upsertSQL, p.ID, p.Name, generation, bst)
+		_, err = conn.Exec(
+			ctx,
+			upsertSQL,
+			p.ID,
+			p.Name,
+			dbData.Generation,
+			dbData.TotalStats,
+			dbData.TypeOne,
+			dbData.TypeTwo)
 		if err != nil {
 			fmt.Printf("❌ Erro ao salvar %s: %v\n", p.Name, err)
 		} else {
