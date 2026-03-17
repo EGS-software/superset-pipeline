@@ -4,7 +4,7 @@ import (
 	"github.com/EGS-software/superset-pipeline/etl-go/internal/model"
 )
 
-func transformPokemon(apiData model.PokemonAPI) model.PokemonDB {
+func TransformPokemon(apiData model.PokemonAPI) model.PokemonDB {
 	bst := 0
 	for _, s := range apiData.Stats {
 		bst += s.BaseStat
@@ -13,12 +13,24 @@ func transformPokemon(apiData model.PokemonAPI) model.PokemonDB {
 	gen := 1
 	if apiData.ID > 151 {
 		gen = 2
-	} // Lógica simplificada para teste
+	}
+
+	typeOne := ""
+	if len(apiData.Types) > 0 {
+		typeOne := apiData.Types[0].Type.Name
+	}
+
+	typeTwo := ""
+	if len(apiData.Types) > 0 {
+		typeTwo := apiData.Types[1].Type.Name
+	}
 
 	return model.PokemonDB{
 		ID:         apiData.ID,
 		Name:       apiData.Name,
 		Generation: gen,
 		TotalStats: bst,
+		TypeOne:    typeOne,
+		TypeTwo:    typeTwo,
 	}
 }
