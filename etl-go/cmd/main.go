@@ -23,7 +23,7 @@ func main() {
 	}
 
 	// --- RETRY LOGIC START ---
-	var conn *pgx.Conn
+	var conn *pgx.Conn // Var used to try DB connect
 	var err error
 	ctx := context.Background()
 
@@ -40,12 +40,13 @@ func main() {
 	if err != nil {
 		log.Fatalf("❌ Could not connect to database after 10 attempts: %v", err)
 	}
+
 	defer conn.Close(ctx)
 	// --- RETRY LOGIC END ---
 
 	fmt.Println("✅ Successfully connected to Postgres!")
 
-	// 3. Create table (The rest of your code stays the same...)
+	// 3. Create table
 	createTableSQL := `
     CREATE TABLE IF NOT EXISTS pokemon_analytics (
        id INT PRIMARY KEY,
@@ -61,16 +62,16 @@ func main() {
 		log.Fatalf("Failed to create table: %v", err)
 	}
 
-	// 4. Iniciar Coleta (Exemplo: Primeiros 151 Pokémon - Gen 1)
+	// 4. Init Collect
 	client := resty.New()
-	fmt.Println("🚀 Iniciando extração da PokeAPI...")
+	fmt.Println("🚀 Initializing Get Data...")
 
-	for i := 1; i <= 151; i++ {
+	for i := 1; i <= 151; i++ { // "i" will be used to get Pokémon by ID in API
 		url := fmt.Sprintf("https://pokeapi.co/api/v2/pokemon/%d", i)
 		resp, err := client.R().Get(url)
 
 		if err != nil {
-			fmt.Printf("❌ Erro ao buscar ID %d: %v\n", i, err)
+			fmt.Printf("❌ Error to get ID %d: %v\n", i, err)
 			continue
 		}
 
@@ -79,6 +80,7 @@ func main() {
 
 		dbData := service.TransformPokemon(p)
 
+		// If data already exists, its replacement to new data with this rules
 		upsertSQL := `
 			INSERT INTO pokemon_analytics (id, name, generation, total_stats, type_1, type_2)
 			VALUES ($1, $2, $3, $4, $5, $6)
@@ -89,6 +91,7 @@ func main() {
 			    type_2 = EXCLUDED.type_2,
 			    updated_at = NOW();
 		`
+		// We get the current context(db), sql string and arguments to replace data
 		_, err = conn.Exec(
 			ctx,
 			upsertSQL,
