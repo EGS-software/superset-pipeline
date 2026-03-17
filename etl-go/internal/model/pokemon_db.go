@@ -5,4 +5,6 @@ type PokemonDB struct {
 	Name       string
 	Generation int
 	TotalStats int
+	TypeOne    string
+	TypeTwo    string
 }
