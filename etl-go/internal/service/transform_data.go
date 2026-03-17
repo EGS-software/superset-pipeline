@@ -21,7 +21,7 @@ func TransformPokemon(apiData model.PokemonAPI) model.PokemonDB {
 	}
 
 	typeTwo := ""
-	if len(apiData.Types) > 0 {
+	if len(apiData.Types) > 1 {
 		typeTwo = apiData.Types[1].Type.Name
 	}
 

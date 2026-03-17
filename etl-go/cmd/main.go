@@ -15,8 +15,6 @@ import (
 	"github.com/joho/godotenv"
 )
 
-// Estruturas para mapear a PokeAPI
-
 func main() {
 	_ = godotenv.Load()
 	dbURL := os.Getenv("DATABASE_URL")
