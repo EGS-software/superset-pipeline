@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # --- GO APP (ETL) ---
   etl-go:
