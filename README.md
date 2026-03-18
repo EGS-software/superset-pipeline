@@ -87,4 +87,4 @@ postgresql://admin:password123@db-postgres:5432/pokemon_dw
 ---
 
 ## 👥 Equipe
-Projeto desenvolvido por **João Victor Benetti Filipim**, **Mauro Pezzetta Roncata**, **Tiago Andrei de Alemida Mendonça**.
+Projeto desenvolvido por **João Victor Benetti Filipim**, **Mauro Pezzetta Roncata**, **Tiago Andrei de Almeida Mendonça**.
