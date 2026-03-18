@@ -19,6 +19,8 @@ services:
       SUPERSET_SECRET_KEY: "seminario_big_data_2026"
     depends_on:
       - db-postgres
+    volumes:
+      - superset_data:/app/superset_home
 
   # SERVIÇO 3: O Banco de Dados PostgreSQL
   db-postgres:
@@ -39,3 +41,4 @@ services:
 # Mapeamento do volume do banco
 volumes:
   postgres_data:
+  superset_data:
